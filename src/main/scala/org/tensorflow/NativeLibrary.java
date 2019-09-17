@@ -1,14 +1,11 @@
-/* [ML-7986] There is a bug in Tensorflow Java API. This is a workaround from
-https://github.com/tensorflow/tensorflow/issues/30635#issuecomment-523005602
-
-Remove this after Tensorflow fix the issue.
-*/
-
 /* Copyright 2017 The TensorFlow Authors. All Rights Reserved.
+
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
+
     http://www.apache.org/licenses/LICENSE-2.0
+
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -67,12 +64,14 @@ final class NativeLibrary {
     final InputStream jniResource =
         NativeLibrary.class.getClassLoader().getResourceAsStream(jniResourceName);
     // Extract the JNI's dependency
+    // [ML-7986] This is patched from TensorFlow tag v1.14.0 to include the fix discussed in
+    // https://github.com/tensorflow/tensorflow/issues/30635
     String frameworkLibName =
         getVersionedLibraryName(System.mapLibraryName("tensorflow_framework"));
     if (frameworkLibName.equals("libtensorflow_framework.dylib"))
-        frameworkLibName = "libtensorflow_framework.1.dylib";
+      frameworkLibName = "libtensorflow_framework.1.dylib";
     if (frameworkLibName.equals("libtensorflow_framework.so"))
-        frameworkLibName = "libtensorflow_framework.so.1";
+      frameworkLibName = "libtensorflow_framework.so.1";
 
     final String frameworkResourceName = makeResourceName(frameworkLibName);
     log("frameworkResourceName: " + frameworkResourceName);
