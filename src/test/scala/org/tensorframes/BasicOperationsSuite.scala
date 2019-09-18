@@ -34,6 +34,16 @@ class BasicOperationsSuite
     compareRows(df2.collect(), Array(Row(1.0, 1.1, 2.1), Row(2.0, 2.2, 4.2)))
   }
 
+  testGraph("Simple add with constant") {
+    val df = sql.createDataFrame(Seq(1.0->1.1, 2.0->2.2)).toDF("a", "b")
+    val df2 = withGraph {
+      val a = df.block("a")
+      val out = a + 3.0 named "out"
+      df.mapBlocks(out).select("a", "out")
+    }
+    compareRows(df2.collect(), Array(Row(1.0, 4.0), Row(2.0, 5.0)))
+  }
+
   testGraph("Identity - 1 dim") {
     val df = make1(Seq(Seq(1.0), Seq(2.0)), "in")
     val adf = ops.analyze(df)
