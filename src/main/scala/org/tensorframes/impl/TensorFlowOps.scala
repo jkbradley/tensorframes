@@ -6,7 +6,7 @@ import java.nio.file.{Files, Paths}
 import org.tensorflow.framework.GraphDef
 import org.{tensorflow => tf}
 import org.apache.spark.sql.types.NumericType
-import org.tensorflow.{Graph, Session}
+import org.tensorflow.{Graph, GraphOperation, Session}
 import org.tensorframes.test.ProtoConversions
 import org.tensorframes.{Logging, Shape, ShapeDescription}
 
@@ -116,7 +116,7 @@ object TensorFlowOps extends Logging {
       logDebug(s"analyzeGraphTF: the graph has size ${sg.content.length.toLong/1000000} MB and ${nodes.size} nodes")
       nodes.flatMap { n =>
         val name = n.getName
-        val op = g.operation(name)
+        val op: GraphOperation = g.operation(name)
         val isInput = inputs.contains(name)
         val isOutput = outputs.contains(name)
         if (isInput || isOutput) {
